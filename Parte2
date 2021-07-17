@@ -1,0 +1,18 @@
+from scipy.optimize import fsolve
+import numpy as np
+
+R0=3.5 #Definir el valor de R0
+N=1000000 #Tamaño de la población
+def f(s):
+    return s-(1-np.exp(-R0*s))
+I=fsolve(f,0.5) #hallar el número de infectados totales
+print('Infectados totales esperados:', I*N)
+
+#Para calcular el número de muertes se usa que M=I*F*theta donde F es una matriz de frecuencia poblacional
+#obtenida de https://saludata.saludcapital.gov.co/osb/index.php/datos-de-salud/demografia/piramidepoblacional/
+# y theta es la matriz de mortalidad ajustada obtenida en clase utilizando un IFR=5/1000
+F=np.array([ [0.2185,0.222],[0.1559,0.1446],[0.1467,0.1120]])
+theta=np.array([[0.002,0.002],[0.0007,0.0021],[0.0158,0.0248]])
+muertes_vec=I*F*theta*10**4
+print('Muertes_totales: ',np.sum(muertes_vec))
+print('Distribucion_muertes por género (M,F) y edades (0-29,30-49,50+): ', muertes_vec)
